@@ -1,0 +1,12 @@
+{
+  "name": "alexantr/emails",
+  "type": "project",
+  "description": "PHP sendmail dummy with web interface for reading emails",
+  "keywords": ["sendmail", "email"],
+  "license": "MIT",
+  "require": {
+    "php": "^5.4.0 || ^7.0",
+    "ext-mailparse": "*",
+    "php-mime-mail-parser/php-mime-mail-parser": "^2.9"
+  }
+}

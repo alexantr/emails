@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+// job example: 0 12 * * * /path/to/emails/cleaner > /dev/null 2>&1
+// set correct info in $cron_delete_time and $cron_delete_older
+
+require_once 'vendor/autoload.php';
+require_once 'functions.php';
+
+$emails_path = __DIR__ . '/inbox';
+
+$older_than = 3600 * 24 * 2; // seconds
+
+$files = get_eml_list("$emails_path");
+foreach ($files as $one) {
+    $full_one_path = "$emails_path/$one";
+    if (is_file($full_one_path) && filemtime($full_one_path) < time() - $older_than) {
+        @unlink($full_one_path);
+    }
+}
