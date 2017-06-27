@@ -8,10 +8,10 @@ if (version_compare(PHP_VERSION, '5.6.0', '<')) {
 }
 mb_regex_encoding('UTF-8');
 
-require_once 'vendor/autoload.php';
-require_once 'functions.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/functions.php';
 
-$inbox_path = __DIR__ . '/inbox';
+$inbox_path = __DIR__ . '/../inbox';
 $per_page = 10;
 
 // only for info alert

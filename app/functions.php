@@ -1,5 +1,11 @@
 <?php
 
+function generate_message_filename()
+{
+    $time = microtime(true);
+    return date('Ymd-His-', $time) . sprintf('%04d', (int)(($time - (int)$time) * 10000)) . '-' . sprintf('%04d', mt_rand(0, 10000)) . '.eml';
+}
+
 function enc($str)
 {
     return htmlspecialchars($str, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
