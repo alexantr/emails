@@ -144,6 +144,7 @@ if (empty($name)) {
     }
     $back_page = ceil(($count + 1) / $per_page);
 
+    $headers = $parser->getHeaders();
     $text = $parser->getMessageBody('text');
 
     include 'header.php';
@@ -170,10 +171,27 @@ if (empty($name)) {
     echo '</div>';
 
     echo '<dl class="dl-horizontal mb20">';
-    echo '<dt>Date:</dt><dd>' . enc($parser->getHeader('date')) . '</dd>';
-    echo '<dt>From:</dt><dd>' . enc($parser->getHeader('from')) . '</dd>';
-    echo '<dt>To:</dt><dd>' . enc($parser->getHeader('to')) . '</dd>';
-    echo '<dt>Subject:</dt><dd>' . enc($parser->getHeader('subject')) . '</dd>';
+    if (isset($headers['date'])) {
+        echo '<dt>Date:</dt><dd>' . enc($headers['date']) . '</dd>';
+    }
+    if (isset($headers['from'])) {
+        echo '<dt>From:</dt><dd>' . enc($headers['from']) . '</dd>';
+    }
+    if (isset($headers['to'])) {
+        echo '<dt>To:</dt><dd>' . enc($headers['to']) . '</dd>';
+    }
+    if (isset($headers['cc'])) {
+        echo '<dt>Cc:</dt><dd>' . enc($headers['cc']) . '</dd>';
+    }
+    if (isset($headers['bcc'])) {
+        echo '<dt>Bcc:</dt><dd>' . enc($headers['bcc']) . '</dd>';
+    }
+    if (isset($headers['reply-to'])) {
+        echo '<dt>Reply-To:</dt><dd>' . enc($headers['reply-to']) . '</dd>';
+    }
+    if (isset($headers['subject'])) {
+        echo '<dt>Subject:</dt><dd>' . enc($headers['subject']) . '</dd>';
+    }
     echo '</dl>';
 
     $active = true;
@@ -220,7 +238,6 @@ if (empty($name)) {
     // Headers
     echo '<div class="tab-pane tab-pane-loading" id="headers">';
     echo '<table class="table table-bordered table-condensed">';
-    $headers = $parser->getHeaders();
     foreach ($headers as $header_name => $header_text) {
         echo '<tr><th>' . enc($header_name) . '</th><td>' . enc($header_text) . '</td></tr>';
     }
