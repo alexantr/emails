@@ -14,10 +14,6 @@ require_once __DIR__ . '/functions.php';
 $inbox_path = __DIR__ . '/../inbox';
 $per_page = 10;
 
-// only for info alert
-$cron_delete_time = '12:00';
-$cron_delete_older = '2 days';
-
 $base_url = preg_replace('/\/index\.php$/', '/', $_SERVER['PHP_SELF']);
 
 $name = isset($_GET['name']) ? $_GET['name'] : '';
@@ -51,13 +47,6 @@ if (empty($name)) {
     include 'header.php';
 
     echo '<h2>Emails <small>(' . $total_files . ($total_files == 1 ? ' item' : ' items') . ')</small></h2>';
-
-    if (DIRECTORY_SEPARATOR == '/') {
-        $crontab = `crontab -l`;
-        if (preg_match('/\/cleaner/', $crontab)) {
-            echo '<div class="alert alert-info">Emails older than ' . $cron_delete_older . ' will be deleted automatically at ' . $cron_delete_time . '.</div>';
-        }
-    }
 
     echo '<div class="list-group">';
     foreach ($page_files as $one) {
