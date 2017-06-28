@@ -1,7 +1,5 @@
 <?php
 
-//error_reporting(0);
-
 ini_set('default_charset', 'UTF-8');
 if (version_compare(PHP_VERSION, '5.6.0', '<')) {
     mb_internal_encoding('UTF-8');
@@ -58,7 +56,8 @@ if (empty($name)) {
             $date = $parser->getHeader('date');
             echo '<a href="' . enc("$base_url?name=$one_urlenc") . '" class="list-group-item">';
             echo '<span class="badge">' . fsize(filesize($full_one_path)) . '</span> ';
-            echo ($total_files - $start_num++) . '. ' . date('d.m.Y H:i:s', strtotime($date)) . ' – ' . enc($parser->getHeader('subject')) . '<br><code>' . enc($one) . '</code>';
+            echo ($total_files - $start_num++) . '. ' . date('d.m.Y H:i:s', strtotime($date)) . ' – ' . enc($parser->getHeader('subject')) . '<br>';
+            echo '<code>' . enc($one) . '</code>';
             echo '</a>';
         }
     }
@@ -211,7 +210,6 @@ if (empty($name)) {
     if (count($attachments) > 0) {
         echo '<li><a href="#attachments" data-toggle="tab">Attachments</a></li>';
     }
-    //echo '<li><a href="#source" data-toggle="tab">Source</a></li>';
     echo '</ul>';
 
     $active = true;
@@ -239,7 +237,12 @@ if (empty($name)) {
     echo '<div class="tab-pane tab-pane-loading" id="headers">';
     echo '<table class="table table-bordered table-condensed">';
     foreach ($headers as $header_name => $header_text) {
-        echo '<tr><th>' . enc($header_name) . '</th><td>' . enc($header_text) . '</td></tr>';
+        if (!is_array($header_text)) {
+            $header_text = [$header_text];
+        }
+        foreach ($header_text as $sub_header_text) {
+            echo '<tr><th>' . enc($header_name) . '</th><td>' . enc($sub_header_text) . '</td></tr>';
+        }
     }
     echo '</table>';
     echo '</div>';
@@ -259,9 +262,6 @@ if (empty($name)) {
         echo '</ol>';
         echo '</div>';
     }
-
-    // Source
-    //echo '<div class="tab-pane tab-pane-loading" id="source"><pre>' . enc(file_get_contents($file_path)) . '</pre></div>';
 
     echo '</div>';
 

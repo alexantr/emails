@@ -32,6 +32,9 @@
             word-wrap: normal;
             word-break: normal;
         }
+        #headers table td {
+            word-break: normal;
+        }
     </style>
     <script>
         function resizeIframe(iframe) {
