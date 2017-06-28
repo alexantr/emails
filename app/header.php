@@ -33,7 +33,7 @@
             word-break: normal;
         }
         #headers table td {
-            word-break: normal;
+            word-break: break-all;
         }
     </style>
     <script>

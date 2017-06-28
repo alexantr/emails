@@ -46,12 +46,10 @@ function fsize($size, $round = 1)
 function array_neighbors($array, $value)
 {
     $values = array_values($array);
-
     $return = [
         'prev' => false,
         'next' => false,
     ];
-
     foreach ($values as $i => $v) {
         if ($values[$i] == $value) {
             if (isset($values[$i - 1])) {
@@ -62,6 +60,12 @@ function array_neighbors($array, $value)
             }
         }
     }
-
     return $return;
+}
+
+function dl_headers($filename, $content_length)
+{
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Content-Length: ' . $content_length);
+    header('Content-Type: application/x-force-download; name="' . $filename . '"');
 }
