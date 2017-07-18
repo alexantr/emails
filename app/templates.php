@@ -85,6 +85,7 @@ function emails_full_nav($base_url, $name, $dl_html, $back_page = 1, $prev_file 
     }
     echo '</div>';
     echo '<a href="' . enc("$base_url?p=$back_page") . '" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-arrow-left"></i> Back</a> ';
+    echo '<a href="' . enc("$base_url?name=$name_urlenc&source=1") . '" class="btn btn-sm btn-default" target="_blank"><i class="glyphicon glyphicon-eye-open"></i> Show EML</a> ';
     echo '<a href="' . enc("$base_url?name=$name_urlenc&source=1&dl=1") . '" class="btn btn-sm btn-default" download><i class="glyphicon glyphicon-download"></i> Download EML</a> ';
     if ($dl_html) {
         echo '<a href="' . enc("$base_url?name=$name_urlenc&html=1&dl=1") . '" class="btn btn-sm btn-default" download><i class="glyphicon glyphicon-download"></i> Download HTML</a>';
