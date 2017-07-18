@@ -37,9 +37,15 @@
         }
     </style>
     <script>
-        function resizeIframe(iframe) {
+        function initIframe(iframe) {
             var doc = 'contentDocument' in iframe ? iframe.contentDocument : iframe.contentWindow.document;
             iframe.style.height = doc.body.scrollHeight + 'px';
+            var links = doc.getElementsByTagName('a');
+            for (var i in links) {
+                if (links.hasOwnProperty(i)) {
+                    links[i].setAttribute('target', '_blank');
+                }
+            }
         }
     </script>
 </head>
