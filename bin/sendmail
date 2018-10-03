@@ -3,8 +3,6 @@
 
 // php.ini: sendmail_path = /path/to/emails/bin/sendmail
 
-require_once __DIR__ . '/../app/functions.php';
-
 $dir = __DIR__ . '/../inbox';
 
 if (!is_dir($dir)) {
@@ -22,3 +20,9 @@ while (false !== ($line = fgets(STDIN))) {
 $path = $dir . '/' . generate_message_filename();
 
 file_put_contents($path, $mail);
+
+function generate_message_filename()
+{
+    $time = microtime(true);
+    return date('Ymd-His-', $time) . sprintf('%04d', (int)(($time - (int)$time) * 10000)) . '-' . sprintf('%04d', mt_rand(0, 10000)) . '.eml';
+}

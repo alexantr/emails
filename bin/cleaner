@@ -3,13 +3,20 @@
 
 // job example: 0 12 * * * /path/to/emails/bin/cleaner > /dev/null 2>&1
 
-require_once __DIR__ . '/../app/functions.php';
-
 $emails_path = __DIR__ . '/../inbox';
 
 $older_than = 3600 * 24 * 2; // seconds
 
-$files = get_eml_list($emails_path);
+$items = scandir($emails_path);
+$files = [];
+foreach ($items as $item) {
+    if (strpos($item, '.') === 0) {
+        continue;
+    }
+    if (is_file($emails_path . '/' . $item) && preg_match('/\.eml$/', $item)) {
+        $files[] = $item;
+    }
+}
 
 foreach ($files as $one) {
     $full_one_path = "$emails_path/$one";
