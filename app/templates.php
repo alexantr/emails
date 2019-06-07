@@ -179,7 +179,7 @@ function emails_tab_html($base_url, $name, $html, &$active)
     }
     $name_urlenc = urlencode($name);
     echo '<div class="tab-pane tab-pane-loading' . ($active ? ' active' : '') . '" id="html">';
-    echo '<iframe src="' . enc("$base_url?name=$name_urlenc&html=1") . '" frameborder="0" scrolling="no" onload="initIframe(this)"></iframe>';
+    echo '<iframe src="' . enc("$base_url?name=$name_urlenc&html=1") . '" frameborder="0" onload="initIframe(this)"></iframe>';
     echo '</div>';
     echo '<div class="tab-pane tab-pane-loading" id="html_source">';
     echo '<pre><code class="html">' . enc($html) . '</code></pre>';
