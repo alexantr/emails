@@ -37,26 +37,6 @@ function fsize($size, $round = 1)
     }
 }
 
-function array_neighbors($array, $value)
-{
-    $values = array_values($array);
-    $return = [
-        'prev' => false,
-        'next' => false,
-    ];
-    foreach ($values as $i => $v) {
-        if ($values[$i] == $value) {
-            if (isset($values[$i - 1])) {
-                $return['prev'] = $values[$i - 1];
-            }
-            if (isset($values[$i + 1])) {
-                $return['next'] = $values[$i + 1];
-            }
-        }
-    }
-    return $return;
-}
-
 function dl_headers($filename, $content_length)
 {
     header('Content-Disposition: attachment; filename="' . $filename . '"');
