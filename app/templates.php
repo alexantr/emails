@@ -3,17 +3,32 @@
 /**
  * Page title
  * @param string $title
- * @param string $subtitle
  * @return void
  */
-function emails_page_title(string $title, string $subtitle = ''): void
+function emails_page_title(string $title, bool $with_subtitle = false): void
 {
-    echo '<h1 class="h2 mt-4 mb-4">';
+    echo '<h1 class="h2 mt-3 ' . ($with_subtitle ? 'mb-2' : 'mb-4') . '">' . enc($title) . '</h1>' . PHP_EOL;
+}
+
+function emails_page_subtitle(string $title, string $secondary = ''): void
+{
+    echo '<h2 class="h4 mb-4">';
     echo enc($title);
-    if (!empty($subtitle)) {
-        echo ' <small class="fw-normal text-secondary">(' . enc($subtitle) . ')</small>';
+    if (!empty($secondary)) {
+        echo ' <small class="fw-normal text-secondary">(' . enc($secondary) . ')</small>';
     }
-    echo '</h1>' . PHP_EOL;
+    echo '</h2>' . PHP_EOL;
+}
+
+/**
+ * Alert
+ * @param string $message
+ * @param bool $warning
+ * @return void
+ */
+function emails_alert(string $message, bool $warning = false): void
+{
+    echo '<div class="alert alert-' . ($warning ? 'warning' : 'danger') . ' mb-4">' . nl2br(enc($message)) . '</div>' . PHP_EOL;
 }
 
 /**

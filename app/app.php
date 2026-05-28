@@ -12,7 +12,8 @@ if (is_file(__DIR__ . '/../config.php')) {
     $config = require __DIR__ . '/../config.php';
 } else {
     emails_page_header('Emails', $base_url);
-    emails_page_title('config.php not found');
+    emails_page_title('Emails');
+    emails_alert('File "config.php" not found.');
     emails_page_footer();
     exit;
 }
@@ -22,11 +23,12 @@ $per_page = intval($config['per_page'] ?? 10);
 if ($per_page < 1) {
     $per_page = 1;
 }
-$site_title = $config['site_title'] ?? 'Emails';
+$site_title = ($config['site_title'] ?? '') ?: 'Emails';
 
 if (empty($file) || !is_file($file) || !is_readable($file)) {
     emails_page_header($site_title, $base_url);
-    emails_page_title('File not found');
+    emails_page_title($site_title);
+    emails_alert('File "' . $file . '" not found.', true);
     emails_page_footer();
     exit;
 }
@@ -35,19 +37,28 @@ $index = isset($_GET['index']) ? (int)$_GET['index'] : false;
 
 $emails = [];
 
-$mbox = new Mail_Mbox($file);
-$mbox->open();
-$size = $mbox->size();
-for ($n = $size - 1; $n >= 0; $n--) {
-    $emails[$n] = $mbox->get($n);
+try {
+    $mbox = new Mail_Mbox($file);
+    $mbox->open();
+    $size = $mbox->size();
+    for ($n = $size - 1; $n >= 0; $n--) {
+        $emails[$n] = $mbox->get($n);
+    }
+    $mbox->close();
+} catch (\Exception $e) {
+    emails_page_header($site_title, $base_url);
+    emails_page_title($site_title);
+    emails_alert($e->getMessage());
+    emails_page_footer();
+    exit;
 }
-$mbox->close();
 
 $total_emails = count($emails);
 
 if ($total_emails == 0) {
     emails_page_header($site_title, $base_url);
-    emails_page_title('No emails found');
+    emails_page_title($site_title);
+    emails_alert('Mailbox "' . $file . '" is empty.', true);
     emails_page_footer();
     exit;
 }
@@ -57,18 +68,14 @@ if ($total_emails == 0) {
 if ($index === false) {
     $page = isset($_GET['p']) ? (int)$_GET['p'] : 1;
     $total_pages = ceil($total_emails / $per_page);
-    if ($page < 1) {
-        $page = 1;
-    }
-    if ($page > $total_pages) {
-        $page = $total_pages;
-    }
+    $page = min($total_pages, max($page, 1));
     // 22: 22-1*10+10=22, 22-2*10+10=12, 22-3*10+10=2
     $start_index = $total_emails - $page * $per_page + $per_page - 1;
     $end_index = max(0, $start_index - $per_page + 1);
 
     emails_page_header($site_title, $base_url);
-    emails_page_title('Emails from ' . $file, $total_emails . ($total_emails == 1 ? ' item' : ' items'));
+    emails_page_title($site_title, true);
+    emails_page_subtitle('Mailbox: ' . $file, $total_emails . ($total_emails == 1 ? ' item' : ' items'));
     emails_list($base_url, $emails, $start_index, $end_index);
     emails_list_pager($base_url, $page, $total_pages);
     emails_page_footer();
@@ -80,17 +87,26 @@ if ($index === false) {
 // file not found
 if (!isset($emails[$index])) {
     emails_page_header($site_title, $base_url);
-    emails_page_title('Email not found');
+    emails_page_title($site_title);
+    emails_alert('Email not found.');
     emails_simple_nav($base_url);
     emails_page_footer();
     exit;
 }
 
+$parser = new PhpMimeMailParser\Parser();
+$parser->setText($emails[$index]);
+
+$headers = $parser->getHeaders();
+$headers_raw = $parser->getHeadersRaw();
+
+$msg_file_name = $headers['message-id'] ?? $index + 1;
+$msg_file_name = preg_replace('/[^a-z0-9@_\-\.]+/i', '', $msg_file_name);
+
 // show or download eml
 if (isset($_GET['source']) && $_GET['source'] == '1') {
     if (isset($_GET['dl']) && $_GET['dl'] == '1') {
-        // todo: set name from date
-        dl_headers(($index + 1) . '.eml', mb_strlen($emails[$index], '8bit'));
+        dl_headers($msg_file_name . '.eml', mb_strlen($emails[$index], '8bit'));
     } else {
         header('Content-Type: text/plain');
     }
@@ -98,17 +114,12 @@ if (isset($_GET['source']) && $_GET['source'] == '1') {
     exit;
 }
 
-$parser = new PhpMimeMailParser\Parser();
-$parser->setText($emails[$index]);
-
 $html = $parser->getMessageBody('html');
 
 // show or download html
 if (isset($_GET['html']) && $_GET['html'] == '1') {
     if (isset($_GET['dl']) && $_GET['dl'] == '1') {
-        // todo: set name from date
-        $dl_name = ($index + 1) . '.html';
-        dl_headers($dl_name, mb_strlen($html, '8bit'));
+        dl_headers($msg_file_name . '.html', mb_strlen($html, '8bit'));
     }
     echo $html;
     exit;
@@ -130,8 +141,6 @@ if (isset($_GET['attachment'])) {
     exit;
 }
 
-$headers = $parser->getHeaders();
-$headers_raw = $parser->getHeadersRaw();
 $text = $parser->getMessageBody('text');
 
 // desc
@@ -147,7 +156,8 @@ if ($next_index < 0) {
 $back_page = ceil(($total_emails - $index) / $per_page);
 
 emails_page_header($site_title, $base_url);
-emails_page_title(($index + 1) . ' / ' . $total_emails);
+emails_page_title($site_title, true);
+emails_page_subtitle('Item ' . ($index + 1) . ' of ' . $total_emails);
 emails_full_nav($base_url, $index, !empty($html), $back_page, $prev_index, $next_index);
 emails_headers($headers);
 emails_tabs($base_url, $index, $html, $text, $headers, $headers_raw, $attachments);
