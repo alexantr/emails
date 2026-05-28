@@ -87,10 +87,10 @@ function emails_full_nav(string $base_url, int $index, bool $dl_html, int $back_
 
     echo '<div class="d-flex flex-wrap align-items-start gap-1 mb-4">';
     echo '<a href="' . enc($back_url) . '" class="btn btn-secondary">&larr; Back</a> ';
-    echo '<a href="' . enc($source_url) . '" class="btn btn-secondary" target="_blank">Show EML</a>';
-    echo '<a href="' . enc($dl_eml_url) . '" class="btn btn-secondary">Download EML</a> ';
+    echo '<a href="' . enc($source_url) . '" class="btn btn-outline-secondary" target="_blank">Show EML</a>';
+    echo '<a href="' . enc($dl_eml_url) . '" class="btn btn-outline-secondary">Download EML</a> ';
     if ($dl_html) {
-        echo '<a href="' . enc($dl_html_url) . '" class="btn btn-secondary">Download HTML</a>';
+        echo '<a href="' . enc($dl_html_url) . '" class="btn btn-outline-secondary">Download HTML</a>';
     }
     echo '<div class="ms-md-auto">';
     if ($prev_index !== false) {
@@ -173,7 +173,7 @@ function emails_tabs(string $base_url, int $index, string $html, string $text, a
         $tabs['attachments'] = 'Attachments';
     }
 
-    echo '<ul class="nav nav-tabs" id="tabs">';
+    echo '<ul class="nav nav-pills mb-3" id="tabs">';
     foreach ($tabs as $tab_id => $tab_text) {
         echo '<li class="nav-item">';
         echo '<button class="nav-link' . ($active ? ' active' : '') . '" id="' . $tab_id . '-tab" data-bs-toggle="tab" data-bs-target="#' . $tab_id . '" type="button" role="tab" aria-controls="' . $tab_id . '" aria-selected="' . ($active ? 'true' : 'false') . '">' . $tab_text . '</button>';
@@ -209,10 +209,10 @@ function emails_tabs(string $base_url, int $index, string $html, string $text, a
  */
 function emails_tab_html(string $base_url, int $index, string $html, bool &$active): void
 {
-    echo '<div class="tab-pane pt-3' . ($active ? ' show active' : '') . '" id="html">';
+    echo '<div class="tab-pane' . ($active ? ' show active' : '') . '" id="html">';
     echo '<iframe src="' . enc("$base_url?index=$index&html=1") . '" frameborder="0" onload="initIframe(this)"></iframe>';
     echo '</div>' . PHP_EOL;
-    echo '<div class="tab-pane pt-3" id="html_source">';
+    echo '<div class="tab-pane" id="html_source">';
     echo '<pre>' . enc($html) . '</pre>';
     echo '</div>' . PHP_EOL;
     $active = false;
@@ -226,7 +226,7 @@ function emails_tab_html(string $base_url, int $index, string $html, bool &$acti
  */
 function emails_tab_text(string $text, bool &$active): void
 {
-    echo '<div class="tab-pane pt-3' . ($active ? ' show active' : '') . '" id="text">';
+    echo '<div class="tab-pane' . ($active ? ' show active' : '') . '" id="text">';
     echo '<pre class="text">' . enc($text) . '</pre>';
     echo '</div>' . PHP_EOL;
     $active = false;
@@ -240,7 +240,7 @@ function emails_tab_text(string $text, bool &$active): void
  */
 function emails_tab_headers(array $headers, bool &$active): void
 {
-    echo '<div class="tab-pane pt-3' . ($active ? ' show active' : '') . '" id="headers">';
+    echo '<div class="tab-pane' . ($active ? ' show active' : '') . '" id="headers">';
     echo '<table class="table table-bordered table-sm">';
     foreach ($headers as $header_name => $header_text) {
         if (!is_array($header_text)) {
@@ -265,7 +265,7 @@ function emails_tab_headers(array $headers, bool &$active): void
  */
 function emails_tab_headers_raw(string $raw_headers): void
 {
-    echo '<div class="tab-pane pt-3" id="headers_raw"><pre>' . enc($raw_headers) . '</pre></div>' . PHP_EOL;
+    echo '<div class="tab-pane" id="headers_raw"><pre>' . enc($raw_headers) . '</pre></div>' . PHP_EOL;
 }
 
 /**
@@ -277,7 +277,7 @@ function emails_tab_headers_raw(string $raw_headers): void
  */
 function emails_tab_attachments(string $base_url, int $index, array $attachments): void
 {
-    echo '<div class="tab-pane pt-3" id="attachments">';
+    echo '<div class="tab-pane" id="attachments">';
     echo '<ol>';
     foreach ($attachments as $attachment) {
         $attachment_name = $attachment->getFilename();
