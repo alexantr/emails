@@ -185,7 +185,7 @@ function emails_tabs(string $base_url, int $index, string $html, string $text, a
     $tabs['headers'] = 'Headers';
     $tabs['headers_raw'] = 'Raw Headers';
     if (!empty($attachments)) {
-        $tabs['attachments'] = 'Attachments';
+        $tabs['attachments'] = 'Attachments (' . count($attachments) . ')';
     }
 
     echo '<ul class="nav nav-pills mb-3" id="tabs">';
