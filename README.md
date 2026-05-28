@@ -21,7 +21,7 @@ Add `config.php` to the project's root folder:
 return [
     'mbox_file' => '/var/mail/www-data',
     'per_page' => 10,
-    'site_title' => 'Emails on example.com',
+    'site_title' => 'Emails on ' . $_SERVER['SERVER_NAME'],
 ];
 ```
 
