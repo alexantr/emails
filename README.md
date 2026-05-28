@@ -8,6 +8,12 @@ Simple web interface for reading emails from /var/mail
 composer create-project alexantr/emails
 ```
 
+or
+
+```bash
+git clone git@github.com:alexantr/emails.git
+```
+
 Add `config.php` to the project's root folder:
 
 ```php
